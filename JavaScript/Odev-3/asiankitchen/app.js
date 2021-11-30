@@ -81,3 +81,74 @@ const menu = [
     desc: `Red bean paste dessert, serving with honey.`,
   },
 ];
+
+
+const buttonContainer = document.querySelector(".btn-container");
+const sectionCenter = document.querySelector(".section-center");
+
+const menuCategories = menu.reduce(
+  (total, currentValue) => {
+    if (!total.includes(currentValue.category)) {
+      total.push(currentValue.category);
+    }
+    return total;
+  },
+  ["All"]
+);
+
+
+function createButtons() {
+  menuCategories.forEach((currentValue) => {
+    buttonContainer.innerHTML += `<button class="btn btn-dark" key="${currentValue}">${currentValue}</button>`;
+  });
+}
+
+buttonContainer.addEventListener("click", (e) => {
+  if (e.target.tagName == "BUTTON") {
+    filterCategories(e);
+  }
+});
+
+function filterCategories(e) {
+  const key = e.target.getAttribute("key");
+  const filteredMenu = menu.filter((item) => {
+    if (key === item.category) {
+      return item;
+    }
+  });
+  
+  if (key === "All") {
+    getMenu(menu);
+  } else {
+    getMenu(filteredMenu);
+  }
+}
+
+function getMenu(menu) {
+  let menus = menu
+    .map((currentValue) => {
+      return `
+    <div class="menu-item col-lg-6">
+    <img
+    src="${currentValue.img}"
+        alt="${currentValue.title}"
+        class="photo"
+        />
+        <div class="menu-info">
+        <div class="menu-title">
+          <h4>${currentValue.title}</h4>
+          <h4>${currentValue.price}</h4>
+          </div>
+          <div class="menu-text">
+          ${currentValue.desc}
+          </div>
+          </div>
+          </div>
+          `;
+    })
+    .join("");
+
+    sectionCenter.innerHTML = menus;
+}
+createButtons();
+getMenu(menu);
